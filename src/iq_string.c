@@ -8,5 +8,6 @@ char *
 iq_strstrip(char *str, const char *chars)
 {
     char            *saveptr;
+
     return strtok_r(str, chars, &saveptr);
 }

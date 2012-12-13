@@ -34,7 +34,7 @@ error:
 }
 
 void
-iq_database_destroy(iq_database_t   *db)
+iq_database_destroy(iq_database_t *db)
 {
 #ifdef IQ_MEMPOOL
     iq_mempool_destroy(db->mempool);
