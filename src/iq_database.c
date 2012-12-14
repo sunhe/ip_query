@@ -7,7 +7,7 @@
 #include "ip_query.h"
 
 static void iq_split_name_value(char *line, char **name, char **value);
-static char *iq_get_addr(char *value, char **next);
+static char *iq_get_addr(char **pvalue);
 static void iq_pton_addr(char *pres, unsigned int *addr, unsigned int *bits);
 
 iq_database_t *
@@ -74,7 +74,7 @@ iq_database_parse_line(iq_database_t *db, char *line)
     iq_mempool_add(db->mempool, name);
 #endif
     while (value) {
-        addr_str = iq_get_addr(value, &value);
+        addr_str = iq_get_addr(&value);
         iq_pton_addr(addr_str, &addr, &bits);
         error = iq_trie_add(db->trie, name, addr, bits);
 #ifdef IQ_DEBUG
@@ -109,14 +109,21 @@ iq_split_name_value(char *line, char **name, char **value)
 }
 
 static char *
-iq_get_addr(char *value, char **next)
+iq_get_addr(char **pvalue)
 {
     char            *addr;
     char            *saveptr;
     const char      *delim = " \t\r\n";  
+    char            *p;
+    size_t          len;
 
-    addr = strtok_r(value, delim, &saveptr);
-    *next= strtok_r(NULL, delim, &saveptr);
+    len = strlen(*pvalue);
+    addr = strtok_r(*pvalue, delim, &saveptr);
+    p = addr+strlen(addr);
+    while (p - *pvalue < len && *p == '\0') {
+        p++;
+    }
+    *pvalue = *p != '\0' ? p : NULL;
 
     return addr;
 }

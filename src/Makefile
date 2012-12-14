@@ -1,6 +1,6 @@
 #make variants
 CC = gcc
-CFLAGS = -Wall -O2 -fPIC
+CFLAGS = -Wall -g3 -fPIC
 CPPFLAGS = $(addprefix -D, $(DEFINES)) $(addprefix -I, $(INCLUDEPATH))
 LDFLAGS = $(LD_OPTIONS) $(addprefix -L, $(LIBPATH)) $^ $(LIBS)
 TARGET_ARCH =
