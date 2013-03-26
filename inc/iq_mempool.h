@@ -8,7 +8,6 @@ typedef struct iq_mempool_node_s {
 
 typedef struct iq_mempool_s {
     iq_mempool_node_t   *head;
-    iq_mempool_node_t   **ptail;
 } iq_mempool_t;
 
 static inline iq_mempool_t *
@@ -18,9 +17,7 @@ iq_mempool_create()
     iq_mempool_node_t   *head;
 
     mempool = calloc(1, sizeof(iq_mempool_t));
-    head = calloc(1, sizeof(iq_mempool_node_t));
-    mempool->head = head;
-    mempool->ptail = &head->next;
+    mempool->head = NULL;
 
     return mempool;
 }
@@ -32,8 +29,8 @@ iq_mempool_add(iq_mempool_t *mempool, void *data)
 
     node = calloc(1, sizeof(iq_mempool_node_t));
     node->data = data;
-    *mempool->ptail = node;
-    mempool->ptail = &node->next;
+    node->next = mempool->head;
+    mempool->head = node;
 }
 
 static inline void
